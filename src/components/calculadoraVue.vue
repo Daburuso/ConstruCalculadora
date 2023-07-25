@@ -42,10 +42,10 @@
 
         </div>
         <div>
-            <p v-if="arrayHora.length && arrayHistorial.length">
+            <p v-if="arrayCompleto.length">
                 <b>Su historial: </b>
                 <ul>
-                <li v-for="arrayHistorials in arrayHistorial, arrayHoras in arrayHora" v-bind:key="arrayHistorials.id" >{{ arrayHistorials }}</li>
+                <li v-for="c in arrayCompleto" v-bind:key="c" >{{ c.MensajeHistorial }} a las {{c.MensajeHora}}</li>
                 </ul>
                 </p>
         </div>
@@ -54,7 +54,7 @@
 
 <script>
 import { app } from '../main.js'
-import { getFirestore, updateDoc,doc, serverTimestamp, query, collection, where, getDocs  } from 'firebase/firestore';
+import { getFirestore, updateDoc,doc, serverTimestamp, query, collection, where, getDocs, arrayUnion, Timestamp  } from 'firebase/firestore';
 export default {
     data() {
         return {
@@ -64,6 +64,7 @@ export default {
             clickOnEqual: false,
             arrayHora: [],
             arrayHistorial: [],
+            arrayCompleto:[]
         }
     },
     methods: {
@@ -115,6 +116,7 @@ export default {
                 let operation = this.getResult;
                 let aux = 0;
                 this.getOperation = operation;
+                let tiempo = Timestamp.now();
                 operation = operation.replace('x', '*');
                 operation = operation.replace('÷', '/');
                 this.getResult = eval(operation);
@@ -132,12 +134,22 @@ export default {
                         }
                     });
                     updateDoc(usuarioRef, {
-                        historial: aux + ',' + operation + '=' + this.getResult,
-                        hora: serverTimestamp(),
+                        historial: arrayUnion(operation+ '=' + this.getResult),
+                        hora: arrayUnion(tiempo),
                     });
 
 
                 }
+            }
+        },
+        async fusion() {
+            console.log("A")
+            for (let i = 0, len = Math.max(this.arrayHistorial.length, this.arrayHora.length); i < len; i++) {
+                console.log("A")
+                this.arrayCompleto.push({
+                    MensajeHora: Timestamp.toString(this.arrayHora[i]),
+                    MensajeHistorial: this.arrayHistorial[i]
+                })
             }
         },
         async clickHistorial() {
@@ -150,11 +162,18 @@ export default {
             } else {
                 querySnapshot.forEach((doc) => {
                     if (doc.exists) {
-                        alert("Su historial es: "+doc.get('historial'));
+                        this.arrayHistorial = doc.get('historial');
+                        this.arrayHora = doc.get('hora')
+                        
+                        
                     }
                 });
             }
-        }
+            this.fusion()
+            console.log(this.arrayCompleto)
+            Timestamp.toString()
+        },
+        
     },
 
 }
