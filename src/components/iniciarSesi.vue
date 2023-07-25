@@ -5,9 +5,9 @@
 
                 <div class="pantalla">
 
-                    <p>{{ getOperation }}</p>
-                    <p>{{ getResult }}</p>
-                    <p>{{ getError }}</p>
+                    <p class="texto">{{ getOperation }}</p>
+                    <p class="texto">{{ getResult }}</p>
+                    <p class="texto">{{ getError }}</p>
 
                 </div>
 
@@ -40,16 +40,18 @@
 
 
                 </div>
-
+                <div>
+                    
+                </div>
+                
             </div>
-            <div>
-                <p v-if="arrayCompleto.length">
-                    <b>Su historial: </b>
-                    <ul>
-                    <li v-for="c in arrayCompleto" v-bind:key="c" >{{ c.MensajeHistorial }} el día {{ c.MensajeHora }}</li>
-                    </ul>
-                    </p>
-            </div>
+            <p class="histo" v-if="arrayCompleto.length">
+                <b>Su historial: </b>
+                <ul>
+                <li v-for="c in arrayCompleto" v-bind:key="c" >{{ c.MensajeHistorial }} el día {{ c.MensajeHora }}</li>
+                </ul>
+            </p>
+            
         </div>
 
 
@@ -304,16 +306,20 @@ export default {
         },
         async clickHistorial() {
             const db = getFirestore(app);
-            const cuentasRef = collection(db, 'Cuentas');
+            const cuentasRef = collection(db, 'usuarios');
+            console.log(this.ingreso_Correo,this.ingreso_Contraseña)
             const q = query(cuentasRef, where('correo', '==', this.ingreso_Correo), where('contraseña', '==', this.ingreso_Contraseña))
+            console.log(q)
             const querySnapshot = await getDocs(q);
+            console.log(querySnapshot)
             if (querySnapshot.empty) {
                 console.log("Mala la weas")
             } else {
                 querySnapshot.forEach((doc) => {
                     if (doc.exists) {
                         this.arrayHistorial=doc.get('historial')
-                        this.arrayHora =doc.get('hora')
+                        this.arrayHora = doc.get('hora')
+                        console.log(this.arrayCompleto)
                     }
                 })
             }
@@ -331,7 +337,37 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
+    color: darkslategray;
+}
+.main{
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin:0px;
+    position: absolute;
+    background-color: darkslategray;
+}
+.dentro{
+height: 100%;
+  width: 8%;
+  background-color: darkslategray;
+  opacity: 75%;
+  position: relative;
+  
+}
+.texto{
+    color: white;
+}
+.histo{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    margin:0px;
+    position: absolute;
+    background-color: darkslategray;
+    color: white;
 }
 </style>

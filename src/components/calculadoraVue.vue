@@ -183,19 +183,6 @@ export default {
 </script>
 
 <style>
-.main{
-    height: auto;
-    background: rgb(81, 233, 81);
-    flex: auto;
-    justify-content: center;
-}
-.dentro{
-    width: 100%;
-}
-.botones{
-    grid: 0%;
-    grid-column-start: 4;
-    grid-row: 5;
-    box-shadow: 2px;
-}
+
+
 </style>
