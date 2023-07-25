@@ -16,6 +16,7 @@
                 <button  @click="clickAC()">AC</button>
                 <button @click="clickDEL()" >DEL</button>
                 <button @click="click('÷')">÷</button>
+                
 
                 <button @click="click('7')">7</button>
                 <button @click="click('8')">8</button>
@@ -45,7 +46,7 @@
             <p v-if="arrayCompleto.length">
                 <b>Su historial: </b>
                 <ul>
-                <li v-for="c in arrayCompleto" v-bind:key="c" >{{ c.MensajeHistorial }} a las {{c.MensajeHora}}</li>
+                <li v-for="c in arrayCompleto" v-bind:key="c" >{{ c.MensajeHistorial }} el día {{c.MensajeHora}}</li>
                 </ul>
                 </p>
         </div>
@@ -81,7 +82,7 @@ export default {
         },
 
         click(par) {
-
+            
             if (this.getResult == '' || !this.clickOnEqual) {
                 if (par != 'x' && par != '+' && par != '-' && par != '÷' && par != '.') {
                     this.getResult = par;
@@ -112,7 +113,8 @@ export default {
             }
         },
         async clickResult() {
-            if(this.clickOnEqual){
+            if (this.clickOnEqual) {
+                
                 let operation = this.getResult;
                 let aux = 0;
                 this.getOperation = operation;
@@ -147,7 +149,7 @@ export default {
             for (let i = 0, len = Math.max(this.arrayHistorial.length, this.arrayHora.length); i < len; i++) {
                 console.log("A")
                 this.arrayCompleto.push({
-                    MensajeHora: Timestamp.toString(this.arrayHora[i]),
+                    MensajeHora: Date(this.arrayHora[i].seconds),
                     MensajeHistorial: this.arrayHistorial[i]
                 })
             }
