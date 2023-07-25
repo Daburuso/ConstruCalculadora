@@ -41,7 +41,14 @@
             </div>
 
         </div>
-
+        <div>
+            <p v-if="arrayHora.length && arrayHistorial.length">
+                <b>Su historial: </b>
+                <ul>
+                <li v-for="arrayHistorials in arrayHistorial, arrayHoras in arrayHora" v-bind:key="arrayHistorials.id" >{{ arrayHistorials }}</li>
+                </ul>
+                </p>
+        </div>
     </div>
 </template>
 
@@ -55,6 +62,8 @@ export default {
             getResult: '',
             getError: '',
             clickOnEqual: false,
+            arrayHora: [],
+            arrayHistorial: [],
         }
     },
     methods: {
